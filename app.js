@@ -7,7 +7,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const product = require('./models/product')
 const loginController = require('./controller/login')
-const cookieParser = require('cookie-parser')
 const productsRoute = require('./routes/product')
 const cors = require('cors')
 const tokenController = require('./controller/helpers/tokenauthenticate')
@@ -29,7 +28,6 @@ app.get('/login1',(req,res)=>{
 // Register view engnie
 app.set('view engine', 'ejs')
 // Routes Post Middleware
-app.use(cookieParser())
 app.use('/', mainRoute)
 app.use('/products', productsRoute)
 app.use('/user', require('./routes/user'))
