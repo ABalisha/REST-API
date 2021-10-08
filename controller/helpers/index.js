@@ -1,15 +1,25 @@
 const product = require('../../models/product')
-const allproducts = product.find()
+const user = require('../../models/user')
+const allproducts1 = async(req,res)=>
+{
+await product.find()
 .then(resu =>
 {
-console.log(resu)
-return resu;
-
+res.send(resu);
 })
 .catch(error=>
 {
-console.log(error);
-return error
+res.send(error)
 })
+}
 
-module.exports = {allproducts:allproducts};
+const allusers = async(req,res)=>{
+await user.find()
+  .then(data=>{
+      return data
+  })
+  .catch(err =>{
+      return err
+  })
+}
+module.exports = {allproducts1,allusers};

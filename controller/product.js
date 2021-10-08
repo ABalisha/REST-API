@@ -1,15 +1,24 @@
 const product = require('../models/product')
-const helperProd = require('./helpers/index')
+const {allproducts1} = require('./helpers/index')
 
 // Showing all products
 const allproducts = async (req,res) =>
 {
-const results = await helperProd.allproducts
+const results = await product.find()
+.then(data=>
+    { 
+        return data 
+    })
+.catch(error=>
+    {
+    console.log(error)
+})
+console.log(results)
 res.render('product',{results:results})
 }
-
 // Main Route
 const mainroute = async (req,res)=>{
+    
     res.json({message:'main route'})
 }
 
@@ -17,6 +26,8 @@ const mainroute = async (req,res)=>{
 const addProduct = async (req,res)=>{
     {
         let message = "";
+if(!await product.findOne({"productTitle":req.body.Productname}))
+{
         const productpost = await new product({
             productTitle: req.body.Productname,
             productPrize: req.body.ProductPrize
@@ -24,7 +35,7 @@ const addProduct = async (req,res)=>{
         await productpost.save()
         .then(result => {
             console.log(result);
-            message = "This product was added succesfully";
+            
         })
         .catch(err => {
             console.log(err);
@@ -32,6 +43,13 @@ const addProduct = async (req,res)=>{
             console.log(req.body.Productname,req.body.ProductPrize)
     
         })
+        message = "This product was added succesfully";
+        res.json({message:"Product added succesfully"})
+    }
+    else
+    {
+        res.json({message:"Product exists"})
+    }
     
     }
 }
@@ -43,6 +61,7 @@ const removeProduct = async (req,res)=> {
         .then(result => {
             console.log(result)
             res.send("Removed Succesfully");
+            
         })
         .catch(errr => {
             console.log(errr)
@@ -51,5 +70,21 @@ const removeProduct = async (req,res)=> {
     }
 }
 
+// delete product based on productTitle
+const delet = async (req,res)=>
+{
+await product.deleteOne({productTitle:req.params.ProductName})
+        .then(data =>{
+            console.log(data)
+            console.log("Deleted Succesfully")
+            res.send(helperProd.allproducts)
+        })
+        .catch(err=> {
+            console.log(err)
+        })
+        const results = await helperProd.allproducts
+        res.render('product',{results:results})
+}
+       
 // Exporting Modules
-module.exports = {allproducts:allproducts,mainroute:mainroute,addProduct:addProduct,removeProduct:removeProduct}
+module.exports = {delet,allproducts,mainroute,addProduct,removeProduct}
